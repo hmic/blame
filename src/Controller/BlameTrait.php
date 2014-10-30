@@ -1,9 +1,8 @@
 <?php
 
-namespace Ceeram\Blame\Controller;
+namespace Blame\Controller;
 
-use Ceeram\Blame\Event\LoggedInUserListener;
-
+use Cake\Controller\Component\AuthComponent;
 /**
  * Class BlameTrait
  *
@@ -17,9 +16,16 @@ trait BlameTrait {
  */
 	public function loadModel($modelClass = null, $type = 'Table') {
 		$model = parent::loadModel($modelClass, $type);
-		$listener = new LoggedInUserListener($this->Auth);
-		$model->eventManager()->attach($listener);
+		if (
+			$model->hasBehavior('Blame') &&
+			(
+				$this->Auth instanceof AuthComponent ||
+				is_callable(array($this->Auth, 'user'))
+			)
+		) {
+		    $model->setUserToBlame($this->Auth->user('id'));
+		}
 		return $model;
 	}
 
-} 
+}
