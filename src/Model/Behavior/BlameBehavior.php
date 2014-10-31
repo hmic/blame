@@ -6,6 +6,7 @@ use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
+use Cake\Routing\Router;
 
 /**
  * Class BlameBehavior
@@ -43,6 +44,22 @@ class BlameBehavior extends Behavior {
 			]
 */
    		],
+   		'belongsTo' => [
+			'Creators' => [
+				'className' => 'Users',
+				'foreignKey' => 'created_by',
+			],
+			'Modifiers' => [
+				'className' => 'Users',
+				'foreignKey' => 'modified_by',
+			]
+/*
+  			'Deleters', [
+  				'className' => 'Users',
+  				'foreignKey' => 'deleted_by',
+			]
+*/
+   		]
 	];
 
 /**
@@ -67,6 +84,13 @@ class BlameBehavior extends Behavior {
     	if (isset($config['events'])) {
     		$this->config('events', $config['events'], false);
     	}
+    	if($this->config('belongsTo')) {
+    	    foreach($this->config('belongsTo') as $model => $options) {
+    	        if(!$table->association($model)) {
+    	            $table->belongsTo($model, $options);
+    	        }
+    	    }
+    	}
     }
 
 /**
@@ -79,8 +103,8 @@ class BlameBehavior extends Behavior {
  * @throws \UnexpectedValueException When the value for an event is not 'always', 'new' or 'existing'
  */
 	public function handleEvent(Event $event, Entity $entity) {
-		$eventName = $event->name();
-		$events = $this->_config['events'];
+	    $eventName = $event->name();
+		$events = $this->config('events');
 		$new = $entity->isNew() !== false;
 
 		foreach ($events[$eventName] as $field => $when) {
@@ -109,7 +133,7 @@ class BlameBehavior extends Behavior {
  * @return array
  */
     public function implementedEvents() {
-    	return array_fill_keys(array_keys($this->_config['events']), 'handleEvent');
+    	return array_fill_keys(array_keys($this->config('events')), 'handleEvent');
     }
 
 /**
@@ -120,7 +144,7 @@ class BlameBehavior extends Behavior {
  */
     public function setUserToBlame($user = null) {
     	if ($user) {
-    		$this->_user = $user;
+    	    $this->_user = $user;
 		}
 		return $this->_user;
     }
@@ -136,7 +160,7 @@ class BlameBehavior extends Behavior {
  * @return bool true if a field is updated, false if no action performed
  */
     public function blameSetUser(Entity $entity, $eventName = 'Model.beforeSave') {
-    	$events = $this->_config['events'];
+    	$events = $this->config('events');
     	if (empty($events[$eventName])) {
     		return false;
     	}
@@ -163,7 +187,7 @@ class BlameBehavior extends Behavior {
  * @return void
  */
 	protected function _updateField(Entity $entity, $field) {
-		if ($entity->dirty($field)) {
+	    if ($entity->dirty($field)) {
 			return;
 		}
 		if ($this->_user !== null) {
