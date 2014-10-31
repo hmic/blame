@@ -1,0 +1,25 @@
+{
+	"name": "hmic/cakephp-blame",
+	"type": "cakephp-plugin",
+    "description": "CakePHP plugin for blaming a user (from AuthComponent) for save action on models.",
+	"homepage": "http://github.com/hmic/blame",
+	"license": "MIT",
+	"require": {
+		"php": ">=5.4.16",
+		"cakephp/plugin-installer": "dev-master",
+		"cakephp/cakephp": "3.0.x-dev"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Blame\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Blame\\Test\\": "tests"
+		}
+	}
+}
