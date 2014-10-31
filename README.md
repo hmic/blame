@@ -3,7 +3,25 @@ CakePHP 3.0 plugin to update e.g. `created_by` and `modified_by` fields.
 
 ## Installation
 
-Create a plugins/Blame dir under your app and checkout this repo.
+Add the following lines to your application's `composer.json`:
+
+```
+    "require": {
+        "hmic/cakephp-blame": "dev-master"
+    }
+```
+
+followed by the command:
+
+`composer update`
+
+Or run the following command directly without changing your `composer.json`:
+
+`composer require hmic/cakephp-blame:dev-master`
+
+OR:
+Create a `plugins/Blame` dir under your app's dir and checkout this repo
+and make sure `['autoload' => true]` is set when loading the plugin like shown below.
 
 ## Usage
 
