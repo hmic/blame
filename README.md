@@ -35,7 +35,9 @@ Add the following line to your AppController:
     use \Blame\Controller\BlameTrait;
 ```
 
-Attach the behavior in the models you want with:
+Attach the behavior in the models you like to use.
+Please note that these need to have the following 2 fields in the database table for it to work:
+`created_by int(11) NULL` and `modified_by int(11) NULL`
 
 ```
     public function initialize(array $config) {
