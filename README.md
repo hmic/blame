@@ -46,7 +46,8 @@ Please note that these need to have the following 2 fields in the database table
 ```
 
 ## Routing
-
+Has been fixed in the core in the meantime - just works right now!
+~~
 This is work in progress, but you can have routing working, for use with baked views,
 (works only for the default configuration for now) by adding this to your app's
 `config/routes.php` directly defore the `$routes->fallbacks();` and commenting that out,
@@ -57,7 +58,7 @@ like this:
  	$routes->connect('/:controller/:action/*', [], ['routeClass' => 'Blame.BlameRoute']);
 //	$routes->fallbacks();
 ```
-
+~~
 ## Bake
 If you want to bake your stuff you need to bake the model first, then add the behavior as shown
 above and afterwards bake the controller and views. It will take care of the associations
