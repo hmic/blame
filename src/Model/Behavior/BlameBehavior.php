@@ -27,24 +27,24 @@ class BlameBehavior extends Behavior {
  *
  * @var array
  */
-    protected $_defaultConfig = [
-   		'implementedFinders' => [],
-   		'implementedMethods' => [
-   			'setUserToBlame' => 'setUserToBlame',
-   			'blameSetUser' => 'blameSetUser'
-   		],
-   		'events' => [
+	protected $_defaultConfig = [
+		'implementedFinders' => [],
+		'implementedMethods' => [
+			'setUserToBlame' => 'setUserToBlame',
+			'blameSetUser' => 'blameSetUser'
+		],
+		'events' => [
 			'Model.beforeSave' => [
 				'created_by' => 'new',
 				'modified_by' => 'always'
 			]
-/* this is possible for e.g. a softdelete implementation too
+/* this is nice for e.g. a softdelete implementation too
 			'Model.beforeDelete' => [
 				'deleted_by' => 'existing',
 			]
 */
-   		],
-   		'belongsTo' => [
+		],
+		'belongsTo' => [
 			'Creators' => [
 				'className' => 'Users',
 				'foreignKey' => 'created_by',
@@ -54,12 +54,12 @@ class BlameBehavior extends Behavior {
 				'foreignKey' => 'modified_by',
 			]
 /*
-  			'Deleters', [
-  				'className' => 'Users',
-  				'foreignKey' => 'deleted_by',
+			'Deleters', [
+				'className' => 'Users',
+				'foreignKey' => 'deleted_by',
 			]
 */
-   		]
+		]
 	];
 
 /**
@@ -78,20 +78,24 @@ class BlameBehavior extends Behavior {
  * @param \Cake\ORM\Table $table The table this behavior is attached to.
  * @param array $config The config for this behavior.
  */
-    public function __construct(Table $table, array $config = []) {
-    	parent::__construct($table, $config);
-
-    	if (isset($config['events'])) {
-    		$this->config('events', $config['events'], false);
-    	}
-    	if($this->config('belongsTo')) {
-    	    foreach($this->config('belongsTo') as $model => $options) {
-    	        if(!$table->association($model)) {
-    	            $table->belongsTo($model, $options);
-    	        }
-    	    }
-    	}
-    }
+	public function __construct(Table $table, array $config = []) {
+		parent::__construct($table, $config);
+		if (isset($config['events'])) {
+			$this->config('events', $config['events'], false);
+		}
+/*
+		if (isset($config['belongsTo'])) {
+			$this->config('belongsTo', $config['belongsTo'], false);
+		}
+*/
+		if($this->config('belongsTo')) {
+			foreach($this->config('belongsTo') as $model => $options) {
+				if(!$table->association($model)) {
+					$table->belongsTo($model, $options);
+				}
+			}
+		}
+	}
 
 /**
  * There is only one event handler, it can be configured to be called for any event
@@ -103,7 +107,7 @@ class BlameBehavior extends Behavior {
  * @throws \UnexpectedValueException When the value for an event is not 'always', 'new' or 'existing'
  */
 	public function handleEvent(Event $event, Entity $entity) {
-	    $eventName = $event->name();
+		$eventName = $event->name();
 		$events = $this->config('events');
 		$new = $entity->isNew() !== false;
 
@@ -132,9 +136,9 @@ class BlameBehavior extends Behavior {
  *
  * @return array
  */
-    public function implementedEvents() {
-    	return array_fill_keys(array_keys($this->config('events')), 'handleEvent');
-    }
+	public function implementedEvents() {
+		return array_fill_keys(array_keys($this->config('events')), 'handleEvent');
+	}
 
 /**
  * Get and optionally set the user to blame.
@@ -142,12 +146,12 @@ class BlameBehavior extends Behavior {
  * @param $user user_id to use
  * @return void
  */
-    public function setUserToBlame($user = null) {
-    	if ($user) {
-    	    $this->_user = $user;
+	public function setUserToBlame($user = null) {
+		if ($user) {
+			$this->_user = $user;
 		}
 		return $this->_user;
-    }
+	}
 
 /**
  * Blame the previously through setUserToBlame() set user for an entity
@@ -159,24 +163,24 @@ class BlameBehavior extends Behavior {
  * @param string $eventName Event name.
  * @return bool true if a field is updated, false if no action performed
  */
-    public function blameSetUser(Entity $entity, $eventName = 'Model.beforeSave') {
-    	$events = $this->config('events');
-    	if (empty($events[$eventName])) {
-    		return false;
-    	}
+	public function blameSetUser(Entity $entity, $eventName = 'Model.beforeSave') {
+		$events = $this->config('events');
+		if (empty($events[$eventName])) {
+			return false;
+		}
 
-    	$return = false;
+		$return = false;
 
-    	foreach ($events[$eventName] as $field => $when) {
-    		if (in_array($when, ['always', 'existing'])) {
-    			$return = true;
-    			$entity->dirty($field, false);
-    			$this->_updateField($entity, $field);
-    		}
-    	}
+		foreach ($events[$eventName] as $field => $when) {
+			if (in_array($when, ['always', 'existing'])) {
+				$return = true;
+				$entity->dirty($field, false);
+				$this->_updateField($entity, $field);
+			}
+		}
 
-    	return $return;
-    }
+		return $return;
+	}
 
 /**
  * Update a field, if it hasn't been updated already
@@ -187,7 +191,7 @@ class BlameBehavior extends Behavior {
  * @return void
  */
 	protected function _updateField(Entity $entity, $field) {
-	    if ($entity->dirty($field)) {
+		if ($entity->dirty($field)) {
 			return;
 		}
 		if ($this->_user !== null) {
