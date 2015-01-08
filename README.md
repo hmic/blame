@@ -1,14 +1,15 @@
 
 CakePHP 3.0 plugin to update e.g. `created_by` and `modified_by` fields.
+Idea taken from and originates of ceeram/blame
 
 ## Installation
 
 Add the following lines to your application's `composer.json`:
 
 ```
-    "require": {
-        "hmic/cakephp-blame": "dev-master"
-    }
+	"require": {
+		"hmic/cakephp-blame": "dev-master"
+	}
 ```
 
 followed by the command:
@@ -32,7 +33,7 @@ In your app's `config/bootstrap.php` add: `Plugin::load('Blame', ['autoload' => 
 Add the following line to your AppController:
 
 ```
-    use \Blame\Controller\BlameTrait;
+	use \Blame\Controller\BlameTrait;
 ```
 
 Attach the behavior in the models you like to use.
@@ -40,9 +41,9 @@ Please note that these need to have the following 2 fields in the database table
 `created_by int(11) NULL` and `modified_by int(11) NULL`
 
 ```
-    public function initialize(array $config) {
-        $this->addBehavior('Blame.Blame');
-    }
+	public function initialize(array $config) {
+		$this->addBehavior('Blame.Blame');
+	}
 ```
 
 ## Routing
@@ -54,8 +55,8 @@ This is work in progress, but you can have routing working, for use with baked v
 like this:
 
 ```
- 	$routes->connect('/:controller', ['action' => 'index'], ['routeClass' => 'Blame.BlameRoute']);
- 	$routes->connect('/:controller/:action/*', [], ['routeClass' => 'Blame.BlameRoute']);
+	$routes->connect('/:controller', ['action' => 'index'], ['routeClass' => 'Blame.BlameRoute']);
+	$routes->connect('/:controller/:action/*', [], ['routeClass' => 'Blame.BlameRoute']);
 //	$routes->fallbacks();
 ```
 </del>
