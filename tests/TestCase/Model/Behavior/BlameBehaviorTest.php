@@ -1,5 +1,5 @@
 <?php
-namespace Ceeram\Blame\Test\TestCase\Model\Behavior;
+namespace Blame\Test\TestCase\Model\Behavior;
 
 use ArrayObject;
 use Cake\Event\Event;
@@ -7,7 +7,7 @@ use Cake\I18n\Time;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Ceeram\Blame\Model\Behavior\BlameBehavior;
+use Blame\Model\Behavior\BlameBehavior;
 
 /**
  * Behavior test case

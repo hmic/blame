@@ -97,4 +97,4 @@ Log::config([
 	]
 ]);
 
-Plugin::load('Ceeram/Blame', ['path' => ROOT]);
+Plugin::load('Blame', ['path' => ROOT]);
